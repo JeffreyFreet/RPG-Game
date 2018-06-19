@@ -1,0 +1,12 @@
+//Story
+Need Starting City
+Work out a starting few items
+
+
+//Development
+UI Work
+Interacting with world ie Chests & Enemies
+
+//Design
+Start working on a few basic Models ie Tree's & Chests
+

@@ -22,7 +22,10 @@ public class PlayerController : MonoBehaviour {
         {
             if (Physics.Raycast(ray, out hit, 100))
             {
-                navAgent.destination = hit.point;
+                if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                {
+                    navAgent.destination = hit.point;
+                }
             }
         }
 	}
