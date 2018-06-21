@@ -3,71 +3,76 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(PlayerMotor))]
 public class PlayerController : MonoBehaviour {
 
-    private NavMeshAgent navAgent;
     public Interactable focus;
-    public Transform target;
+    public LayerMask movementMask;
 
-	// Use this for initialization
-	void Start () {
-        navAgent = GetComponent<NavMeshAgent>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    Camera cam;
+    PlayerMotor motor;
 
-        if(target != null)
-        {
-            navAgent.SetDestination(target.position);
-        }
+    void Start()
+    {
+        cam = Camera.main;
+        motor = GetComponent<PlayerMotor>();
+    }
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+    void Update()
+    {
 
+        //Movement
         if (Input.GetMouseButtonDown(0))
         {
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if(Physics.Raycast(ray, out hit, 100, movementMask))
+            {
+                //Debug.Log("We hit " + hit.collider.name + " " + hit.point);
+                motor.MoveToPoint(hit.point);
+
+                RemoveFocus();
+            }
+        }
+
+        //Interaction
+        if (Input.GetMouseButtonDown(1))
+        {
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
             if (Physics.Raycast(ray, out hit, 100))
             {
-
-                //Handling Interactable objects
                 Interactable interactable = hit.collider.GetComponent<Interactable>();
                 if(interactable != null)
                 {
-                    SetFocus(interactable);;
-                }
-
-                //Handling Standard movement
-                if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
-                {
-                    navAgent.destination = hit.point;
-                    RemoveFocus();
+                    SetFocus(interactable);
                 }
             }
         }
-	}
+    }
 
-    //These 2 functions are responsible for focusing on an object that can be interacted with
     void SetFocus(Interactable newFocus)
     {
-        focus = newFocus;
-        FollowTarget(focus);
-    }
-    void RemoveFocus()
-    {
-        focus = null;
-        RemoveTarget();
+        if(newFocus != focus)
+        {
+            if(focus != null)
+                focus.OnDefocused();
+
+            focus = newFocus;
+            newFocus.OnFocused(transform);
+        }
+
+        motor.FollowTarget(newFocus);
     }
 
-    //These functions will track the interactable object and move towards them, a regular move will cancel this out
-    public void FollowTarget(Interactable newTarget)
+    void RemoveFocus()
     {
-        navAgent.stoppingDistance = newTarget.radius * .8f;
-        target = newTarget.transform;;
-    }
-    public void RemoveTarget()
-    {
-        navAgent.stoppingDistance = 0f;
-        target = null;
+        if (focus != null)
+            focus.OnDefocused();
+
+        focus = null;
+        motor.StopFollowingTarget();
     }
 }

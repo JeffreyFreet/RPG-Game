@@ -5,7 +5,6 @@ using UnityEngine;
 public class CameraController : MonoBehaviour {
 
     public Transform target;
-    public Light devLight;  //Light source for Building in unity
     public Vector3 offset;
 
     private float pitch = 2f;
@@ -17,11 +16,6 @@ public class CameraController : MonoBehaviour {
 
     private float currentZoom = 10f;
     private float currentYaw = 0f;
-
-    private void Start()
-    {
-        devLight.enabled = !devLight.enabled;   //Turns off Dev Lighting in the scene
-    }
 
     void Update()
     {
