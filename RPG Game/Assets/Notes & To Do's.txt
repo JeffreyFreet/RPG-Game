@@ -6,7 +6,6 @@ Work out a starting few items
 //Development
 UI Work
 Interacting with world ie Chests & Enemies
-Need to add Follow script for the Light, could just remove component when not needed? (Leave for now until an Issue)
 
 //Design
 Start working on a few basic Models ie Tree's & Chests

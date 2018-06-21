@@ -1,11 +1,6 @@
 ﻿using UnityEngine;
 
-/*	
-	This component is for all objects that the player can
-	interact with such as enemies, items etc. It is meant
-	to be used as a base class.
-*/
-
+//Base class for anyting Interactable
 public class Interactable : MonoBehaviour
 {
 
