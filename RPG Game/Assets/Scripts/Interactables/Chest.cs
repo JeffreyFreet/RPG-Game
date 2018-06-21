@@ -4,13 +4,9 @@ using UnityEngine;
 
 public class Chest : Interactable {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public override void Interact()
+    {
+        Debug.Log("This is a " + transform.name);
+        base.Interact();
+    }
 }

@@ -1,29 +1,35 @@
 ﻿using UnityEngine;
 
-public class Interactable : MonoBehaviour {
+/*	
+	This component is for all objects that the player can
+	interact with such as enemies, items etc. It is meant
+	to be used as a base class.
+*/
 
-    public float radius = 3f;   //How close you need to be to interact
-    public Transform interactionTransform;  //Allows you to dictate a specific spot to interact, ie only front of chests
+public class Interactable : MonoBehaviour
+{
 
-    bool isFocus = false;
-    Transform player;
+    public float radius = 3f;               // How close do we need to be to interact?
+    public Transform interactionTransform;  // The transform from where we interact in case you want to offset it
 
-    bool hasInteracted = false;
+    bool isFocus = false;   
+    Transform player;       
+
+    bool hasInteracted = false; 
 
     public virtual void Interact()
     {
-        //Will be an override to make specific interaction
-        //for different objects
-
-        Debug.Log("Interaction not implemented with " + transform.name);
+        // This method is meant to be overwritten
+        Debug.Log("Interact not implemented for " + transform.name);
     }
 
     void Update()
     {
+        
         if (isFocus && !hasInteracted)
         {
             float distance = Vector3.Distance(player.position, interactionTransform.position);
-            if(distance <= radius)
+            if (distance <= radius)
             {
                 Interact();
                 hasInteracted = true;
@@ -31,6 +37,7 @@ public class Interactable : MonoBehaviour {
         }
     }
 
+    // Called when the object starts being focused
     public void OnFocused(Transform playerTransform)
     {
         isFocus = true;
@@ -38,6 +45,7 @@ public class Interactable : MonoBehaviour {
         hasInteracted = false;
     }
 
+    // Called when the object is no longer focused
     public void OnDefocused()
     {
         isFocus = false;
@@ -45,10 +53,14 @@ public class Interactable : MonoBehaviour {
         hasInteracted = false;
     }
 
-    //Visualize the interaction area
-    private void OnDrawGizmosSelected()
+    // Draw our radius in the editor
+    void OnDrawGizmosSelected()
     {
+        if (interactionTransform == null)
+            interactionTransform = transform;
+
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(interactionTransform.position, radius);
     }
+
 }
